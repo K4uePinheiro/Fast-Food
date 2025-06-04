@@ -4,6 +4,8 @@
  */
 package local.kaue.FastFuriousFood.Controller;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import local.kaue.FastFuriousFood.domain.model.Produto;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ProdutoController {
+    
+    @PersistenceContext
+    private EntityManager manager;
 
     List<Produto> listaProduto;
 
