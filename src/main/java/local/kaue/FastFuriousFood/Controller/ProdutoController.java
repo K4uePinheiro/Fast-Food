@@ -18,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+ HEAD
 import org.springframework.web.bind.annotation.PutMapping;
+=======
+>>>>>>> a59493efebfa939388fa69f0433ee4924aecb423
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,6 +64,7 @@ public class ProdutoController {
         
         return produtoRepository.save(produto);
     }
+<<<<<<< HEAD
     
     @PutMapping("/produto/{produtoID}")
     public ResponseEntity<Produto> atualizar(@PathVariable Long produtoID,
@@ -73,4 +77,6 @@ public class ProdutoController {
         produto = produtoRepository.save(produto);
         return ResponseEntity.ok(produto);
     }
+=======
+>>>>>>> a59493efebfa939388fa69f0433ee4924aecb423
 }
