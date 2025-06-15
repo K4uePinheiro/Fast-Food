@@ -6,12 +6,14 @@ package local.kaue.FastFuriousFood.domain.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import local.kaue.FastFuriousFood.domain.model.Pedido;
 import local.kaue.FastFuriousFood.domain.model.Produto;
 import local.kaue.FastFuriousFood.domain.model.StatusPedido;
 import local.kaue.FastFuriousFood.domain.repository.PedidoRepository;
+import local.kaue.FastFuriousFood.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,14 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
 
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
     public boolean existsById(Long id) {
         return pedidoRepository.existsById(id);
     }
 
-    public List<Pedido> listarPedidos() {
+    public List<Pedido> findAll() {
         return (List<Pedido>) pedidoRepository.findAll();
     }
 
@@ -40,7 +45,17 @@ public class PedidoService {
 
     public Pedido criar(Pedido pedido) {
         pedido.setDataAbertura(LocalDateTime.now());
-        pedido.setStatus(StatusPedido.ABERTO); // opcional: definir status inicial
+        pedido.setStatus(StatusPedido.ABERTO);
+
+        // Carrega os produtos completos pelo ID
+        List<Produto> produtosCompletos = new ArrayList<>();
+        for (Produto p : pedido.getProdutos()) {
+            Produto produtoDoBanco = produtoRepository.findById(p.getId())
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + p.getId()));
+            produtosCompletos.add(produtoDoBanco);
+        }
+        pedido.setProdutos(produtosCompletos);
+
         return pedidoRepository.save(pedido);
     }
 
@@ -67,5 +82,5 @@ public class PedidoService {
         pedido.setStatus(novoStatus);
         return pedidoRepository.save(pedido);
     }
-   
+
 }

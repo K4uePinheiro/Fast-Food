@@ -4,17 +4,22 @@
  */
 package local.kaue.FastFuriousFood.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,11 +33,16 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Produto produto;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "pedidos_produtos",
+            joinColumns = @JoinColumn(name = "pedido_id"),
+            inverseJoinColumns = @JoinColumn(name = "produto_id")
+    )
+    private List<Produto> produtos;
 
     private String observacao;
-    
+
     private BigDecimal preco_total;
 
     @Enumerated(EnumType.STRING)
@@ -40,15 +50,15 @@ public class Pedido {
 
     @Column(name = "data_abertura")
     private LocalDateTime dataAbertura;
-    
+
     @Column(name = "data_finalizacao")
     private LocalDateTime dataFinalizacao;
 
     public Pedido() {
     }
 
-    public Pedido(Produto produto, String observacao, BigDecimal preco_total) {
-        this.produto = produto;
+    public Pedido(List<Produto> produtos, String observacao, BigDecimal preco_total) {
+        this.produtos = produtos;
         this.observacao = observacao;
         this.preco_total = preco_total;
     }
@@ -61,12 +71,12 @@ public class Pedido {
         this.id = id;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public List<Produto> getProdutos() {
+        return produtos;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 
     public String getObservacao() {

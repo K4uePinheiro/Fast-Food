@@ -11,13 +11,13 @@ import local.kaue.FastFuriousFood.domain.model.StatusPedido;
  * @author kaueg
  */
 public class StatusPedidoDTO {
-    private StatusPedido status;
+    private String status;
 
-    public StatusPedido getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusPedido status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }
