@@ -93,9 +93,15 @@ public class PedidoController {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
+        // Verifica se pedido está entregue
+        if (pedido.getStatus() == StatusPedido.ENTREGUE) {
+            throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
+        }
+
         if (dto.getProdutosIds() != null && !dto.getProdutosIds().isEmpty()) {
             List<Produto> produtos = produtoRepository.findAllById(dto.getProdutosIds());
             pedido.setProdutos(produtos);
+            pedido = pedidoService.calcularPrecoTotal(pedido);
         }
 
         if (dto.getObservacao() != null) {
@@ -127,11 +133,10 @@ public class PedidoController {
         if (dto.getStatus() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo 'status' não pode ser nulo");
         }
-
         StatusPedido statusAtual = pedido.getStatus();
 
         if (statusAtual == StatusPedido.ENTREGUE) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Não é permitido alterar o status se o pedido foi entregue");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é permitido alterar o status se o pedido foi entregue");
 
         }
 
@@ -143,9 +148,16 @@ public class PedidoController {
             throw new RuntimeException("Status inválido: " + dto.getStatus());
         }
 
+        if (novoStatus == StatusPedido.ENTREGUE && pedido.getStatus() != StatusPedido.PRONTO) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido deve estar PRONTO antes de ser entregue.");
+
+        } else {
+            pedido.setDataFinalizacao(null);
+
+        }
         pedido.setStatus(novoStatus);
 
-        if (novoStatus == StatusPedido.PRONTO || novoStatus == StatusPedido.CANCELADO) {
+        if (novoStatus == StatusPedido.PRONTO || novoStatus == StatusPedido.CANCELADO || novoStatus == StatusPedido.ENTREGUE) {
             pedido.setDataFinalizacao(LocalDateTime.now());
         } else {
             pedido.setDataFinalizacao(null);

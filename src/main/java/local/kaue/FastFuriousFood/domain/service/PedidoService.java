@@ -4,6 +4,7 @@
  */
 package local.kaue.FastFuriousFood.domain.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,10 +60,25 @@ public class PedidoService {
         
         calcularPrecoTotal(pedido);
         return pedidoRepository.save(pedido);
+        
     }
 
-    public Pedido atualizarPedido(Pedido pedido) {
-        return pedidoRepository.save(pedido);
+     public Pedido atualizarPedido(Long pedidoId, Pedido pedidoAtualizado) {
+        Pedido pedidoExistente = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado"));
+
+        if (pedidoExistente.getStatus() == StatusPedido.ENTREGUE) {
+            throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
+        }
+
+        // Atualize os campos que quer permitir alterar
+        pedidoExistente.setProdutos(pedidoAtualizado.getProdutos());
+        pedidoExistente.setObservacao(pedidoAtualizado.getObservacao());
+        pedidoExistente.setStatus(pedidoAtualizado.getStatus());
+        // Atualize preço total recalculando, por exemplo
+        calcularPrecoTotal(pedidoExistente);
+
+        return pedidoRepository.save(pedidoExistente);
     }
 
     public void excluir(Long id) {
