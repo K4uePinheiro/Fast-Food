@@ -8,23 +8,36 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import java.util.Objects;
 
 /**
  *
  * @author sesideva
  */
-@Entity 
+@Entity
 public class Produto {
-     
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private  String nome;
+
+    @NotBlank
+    @Size(max = 60)
+    private String nome;
+
+    @NotNull
+    @Positive
     private double preco;
+
+    @NotBlank
+    @Size(max = 60)
     private String categoria;
-    
-    
 
     public Produto() {
     }
@@ -101,6 +114,5 @@ public class Produto {
         }
         return Objects.equals(this.categoria, other.categoria);
     }
-    
-    
+
 }

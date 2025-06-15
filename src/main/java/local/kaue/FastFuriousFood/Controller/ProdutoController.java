@@ -1,18 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package local.kaue.FastFuriousFood.Controller;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import java.util.ArrayList;
+
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import local.kaue.FastFuriousFood.domain.model.Produto;
 import local.kaue.FastFuriousFood.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  *
@@ -38,7 +34,7 @@ public class ProdutoController {
     public List<Produto> listas() {
 
         //return produtoRepository.findAll();
-        return produtoRepository.findByNome("X-Salada");
+        return produtoRepository.findAll();
 
     }
 
@@ -58,14 +54,14 @@ public class ProdutoController {
     
     @PostMapping("/produto")
     @ResponseStatus(HttpStatus.CREATED)
-    public Produto adicionar(@RequestBody Produto produto){
+    public Produto adicionar(@Valid @RequestBody Produto produto){
         
         return produtoRepository.save(produto);
     }
 
     
     @PutMapping("/produto/{produtoID}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long produtoID,
+    public ResponseEntity<Produto> atualizar(@Valid @PathVariable Long produtoID,
                                              @RequestBody Produto produto){
         //Verificase o cliente  existe
         if (!produtoRepository.existsById(produtoID)){
