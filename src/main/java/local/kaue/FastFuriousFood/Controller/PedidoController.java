@@ -58,6 +58,7 @@ public class PedidoController {
     }
 
     //vai mostrar
+    
     @GetMapping("{id}")
     public ResponseEntity<Pedido> findById(@PathVariable Long id) {
 
