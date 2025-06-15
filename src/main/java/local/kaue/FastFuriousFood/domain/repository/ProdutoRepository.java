@@ -14,11 +14,12 @@ import org.springframework.stereotype.Repository;
  * @author sesideva
  */
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, Long>{
-    
-    
+public interface ProdutoRepository extends JpaRepository<Produto, Long> {
+
     List<Produto> findByNome(String nome);
-    List<Produto> findByNomeContainingIgnoreCase(String nome);
-    
-    
+
+    List<Produto> findByNomeIgnoreCase(String nome);
+
+    List<Produto> findByCategoriaContainingIgnoreCase(String categoria);
+
 }

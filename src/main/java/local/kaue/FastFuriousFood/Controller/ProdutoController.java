@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import local.kaue.FastFuriousFood.domain.model.Produto;
 import local.kaue.FastFuriousFood.domain.repository.ProdutoRepository;
+import local.kaue.FastFuriousFood.domain.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,10 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    
+    @Autowired
+    private ProdutoService produtoService;
+            
     @GetMapping("/produto")
     public List<Produto> listas() {
 
@@ -56,7 +61,8 @@ public class ProdutoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Produto adicionar(@Valid @RequestBody Produto produto){
         
-        return produtoRepository.save(produto);
+        return produtoService.salvar(produto);
+        
     }
 
     
@@ -68,7 +74,7 @@ public class ProdutoController {
             return ResponseEntity.notFound().build();
         }
         produto.setId(produtoID);
-        produto = produtoRepository.save(produto);
+        produto = produtoService.salvar(produto);
         return ResponseEntity.ok(produto);
     }
     
@@ -80,7 +86,7 @@ public class ProdutoController {
         if(!produtoRepository.existsById(produtoID)){
             return ResponseEntity.notFound().build();
         }
-        produtoRepository.deleteById(produtoID);
+        produtoService.excluir(produtoID);
         return ResponseEntity.noContent().build();
     }
 }

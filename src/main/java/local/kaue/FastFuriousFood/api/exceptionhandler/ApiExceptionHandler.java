@@ -50,6 +50,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problema.setCampos(camposComErro);
 
         return super.handleExceptionInternal(ex, problema, headers, status, request);
+     }
+
+    // Tratamento para produto já cadastrado
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+
+        ProblemaException problema = new ProblemaException();
+        problema.setStatus(HttpStatus.BAD_REQUEST.value());
+        problema.setTitulo(ex.getMessage());
+        problema.setDatahora(LocalDateTime.now());
+
+        return handleExceptionInternal(ex, problema, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }
