@@ -53,9 +53,11 @@ public class PedidoService {
             Produto produtoDoBanco = produtoRepository.findById(p.getId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + p.getId()));
             produtosCompletos.add(produtoDoBanco);
+
         }
         pedido.setProdutos(produtosCompletos);
-
+        
+        calcularPrecoTotal(pedido);
         return pedidoRepository.save(pedido);
     }
 
@@ -81,6 +83,19 @@ public class PedidoService {
         Pedido pedido = pedidoOptional.get();
         pedido.setStatus(novoStatus);
         return pedidoRepository.save(pedido);
+    }
+
+    public Pedido calcularPrecoTotal(Pedido pedido) {
+        BigDecimal soma = BigDecimal.ZERO;
+        if (pedido.getProdutos() != null) {
+            for (Produto p : pedido.getProdutos()) {
+                System.out.println("Produto: " + p.getNome() + ", preço: " + p.getPreco());
+                soma = soma.add(p.getPreco());  // Sem null check, já que preco é primitivo
+            }
+        }
+        System.out.println("Soma total: " + soma);
+        pedido.setPreco_total(soma);
+        return pedido;
     }
 
 }

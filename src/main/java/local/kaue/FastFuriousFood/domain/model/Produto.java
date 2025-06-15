@@ -4,6 +4,7 @@
  */
 package local.kaue.FastFuriousFood.domain.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -33,7 +35,8 @@ public class Produto {
 
     @NotNull
     @Positive
-    private double preco;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal preco;
 
     @NotBlank
     @Size(max = 60)
@@ -46,7 +49,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(long id, String nome, double preco, String categoria) {
+    public Produto(long id, String nome, BigDecimal preco, String categoria) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
@@ -71,11 +74,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 
@@ -100,7 +103,7 @@ public class Produto {
         int hash = 7;
         hash = 37 * hash + (int) (this.id ^ (this.id >>> 32));
         hash = 37 * hash + Objects.hashCode(this.nome);
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.preco) ^ (Double.doubleToLongBits(this.preco) >>> 32));
+        hash = 37 * hash + Objects.hashCode(this.preco);
         hash = 37 * hash + Objects.hashCode(this.categoria);
         return hash;
     }
@@ -120,7 +123,7 @@ public class Produto {
         if (this.id != other.id) {
             return false;
         }
-        if (Double.doubleToLongBits(this.preco) != Double.doubleToLongBits(other.preco)) {
+        if (this.preco != null ? this.preco.compareTo(other.preco) != 0 : other.preco != null) {
             return false;
         }
         if (!Objects.equals(this.nome, other.nome)) {
