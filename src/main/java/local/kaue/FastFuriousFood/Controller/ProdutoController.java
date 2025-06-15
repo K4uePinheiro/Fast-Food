@@ -1,6 +1,4 @@
-
 package local.kaue.FastFuriousFood.Controller;
-
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -17,9 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 
 /**
  *
@@ -31,10 +29,9 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    
     @Autowired
     private ProdutoService produtoService;
-            
+
     @GetMapping("/produto")
     public List<Produto> listas() {
 
@@ -56,34 +53,37 @@ public class ProdutoController {
         }
 
     }
-    
-    @PostMapping("/produto")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Produto adicionar(@Valid @RequestBody Produto produto){
-        
-        return produtoService.salvar(produto);
-        
+
+    @GetMapping("/produto/cat/{categoria}")
+    public List<Produto> buscarPorCategoria(@PathVariable String categoria) {
+        return produtoService.listByCategoria(categoria);
     }
 
-    
+    @PostMapping("/produto")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Produto adicionar(@Valid @RequestBody Produto produto) {
+
+        return produtoService.salvar(produto);
+
+    }
+
     @PutMapping("/produto/{produtoID}")
     public ResponseEntity<Produto> atualizar(@Valid @PathVariable Long produtoID,
-                                             @RequestBody Produto produto){
+            @RequestBody Produto produto) {
         //Verificase o cliente  existe
-        if (!produtoRepository.existsById(produtoID)){
+        if (!produtoRepository.existsById(produtoID)) {
             return ResponseEntity.notFound().build();
         }
         produto.setId(produtoID);
         produto = produtoService.salvar(produto);
         return ResponseEntity.ok(produto);
     }
-    
-    
+
     @DeleteMapping("/produto/{produtoID}")
-    public ResponseEntity<Void> excluir(@PathVariable Long produtoID){
+    public ResponseEntity<Void> excluir(@PathVariable Long produtoID) {
         //verifica se produto existe ou não
-        
-        if(!produtoRepository.existsById(produtoID)){
+
+        if (!produtoRepository.existsById(produtoID)) {
             return ResponseEntity.notFound().build();
         }
         produtoService.excluir(produtoID);

@@ -39,6 +39,10 @@ public class Produto {
     @Size(max = 60)
     private String categoria;
 
+    @NotBlank
+    @Size(max = 200)
+    private String descricao;
+
     public Produto() {
     }
 
@@ -47,6 +51,8 @@ public class Produto {
         this.nome = nome;
         this.preco = preco;
         this.categoria = categoria;
+        this.descricao = descricao;
+
     }
 
     public long getId() {
@@ -79,6 +85,14 @@ public class Produto {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problema.setCampos(camposComErro);
 
         return super.handleExceptionInternal(ex, problema, headers, status, request);
-     }
+    }
 
     // Tratamento para produto já cadastrado
     @ExceptionHandler(IllegalArgumentException.class)

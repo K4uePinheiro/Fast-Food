@@ -34,7 +34,7 @@ public class ProdutoService {
     }
 
     public List<Produto> listByCategoria(String categoria) {
-        return produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
+        return produtoRepository.findByCategoria(categoria);
     }
 
     public Produto salvar(Produto produto) {
