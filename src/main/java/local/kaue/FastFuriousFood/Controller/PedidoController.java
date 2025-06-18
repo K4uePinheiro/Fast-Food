@@ -4,6 +4,7 @@
  */
 package local.kaue.FastFuriousFood.Controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.springframework.web.server.ResponseStatusException;
  * @author kaueg
  */
 @RestController
+@SecurityRequirement(name = "ApiKeyAuth")
 @RequestMapping("/pedidos")
 public class PedidoController {
 

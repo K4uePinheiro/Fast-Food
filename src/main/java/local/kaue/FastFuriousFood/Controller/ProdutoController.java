@@ -1,5 +1,6 @@
 package local.kaue.FastFuriousFood.Controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author sesideva
  */
 @RestController
+@SecurityRequirement(name = "ApiKeyAuth")
 public class ProdutoController {
 
     @Autowired
