@@ -4,8 +4,11 @@
  */
 package local.kaue.FastFuriousFood.domain.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import local.kaue.FastFuriousFood.DTO.ProdutoDTO;
 import local.kaue.FastFuriousFood.domain.model.Produto;
 import local.kaue.FastFuriousFood.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,14 @@ public class ProdutoService {
 
         return produtoRepository.save(produto);
     }
+
+  public Produto atualizar(Long id, ProdutoDTO produtoAtualizado) {
+    Produto produtoExistente = produtoRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
+
+ 
+    return produtoRepository.save(produtoExistente);
+}
 
     public void excluir(Long id) {
         produtoRepository.deleteById(id);

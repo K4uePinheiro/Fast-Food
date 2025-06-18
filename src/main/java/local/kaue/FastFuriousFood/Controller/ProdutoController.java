@@ -1,5 +1,7 @@
 package local.kaue.FastFuriousFood.Controller;
 
+
+
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +72,7 @@ public class ProdutoController {
     @PutMapping("/produto/{produtoID}")
     public ResponseEntity<Produto> atualizar(@Valid @PathVariable Long produtoID,
             @RequestBody Produto produto) {
-        //Verificase o cliente  existe
+        //Verificase o produto existe
         if (!produtoRepository.existsById(produtoID)) {
             return ResponseEntity.notFound().build();
         }

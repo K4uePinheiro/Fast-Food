@@ -4,7 +4,7 @@
  */
 package local.kaue.FastFuriousFood.Controller;
 
-import jakarta.validation.Valid;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import org.springframework.web.server.ResponseStatusException;
  * @author kaueg
  */
 @RestController
-@RequestMapping("/pedido")
+@RequestMapping("/pedidos")
 public class PedidoController {
 
     @Autowired
@@ -90,40 +90,32 @@ public class PedidoController {
 
     //Vai atualizar- mexer no caso
     @PutMapping("/{id}")
-    public Pedido atualizarPedido(@PathVariable Long id, @RequestBody AtualizarPedidoDTO dto) {
-        Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+   public Pedido atualizarPedido(@PathVariable Long id, @RequestBody AtualizarPedidoDTO dto) {
+    Pedido pedido = pedidoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
-        // Verifica se pedido está entregue
-        if (pedido.getStatus() == StatusPedido.ENTREGUE) {
-            throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
-        }
-
-        if (dto.getProdutosIds() != null && !dto.getProdutosIds().isEmpty()) {
-            List<Produto> produtos = produtoRepository.findAllById(dto.getProdutosIds());
-            pedido.setProdutos(produtos);
-            pedido = pedidoService.calcularPrecoTotal(pedido);
-        }
-
-        if (dto.getObservacao() != null) {
-            pedido.setObservacao(dto.getObservacao());
-        }
-
-        return pedidoRepository.save(pedido);
+    // Verifica se pedido está entregue
+    if (pedido.getStatus() == StatusPedido.ENTREGUE) {
+        throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
     }
 
-    //vai excluir
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        //verifica se produto existe ou não
+    if (dto.getProdutosIds() != null && !dto.getProdutosIds().isEmpty()) {
+        List<Produto> produtos = produtoRepository.findAllById(dto.getProdutosIds());
+        
+        // Limpa e adiciona os produtos
+        pedido.getProdutos().clear();
+        pedido.getProdutos().addAll(produtos);
 
-        if (!pedidoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        pedidoService.excluir(id);
-        return ResponseEntity.noContent().build();
-
+        pedido = pedidoService.calcularPrecoTotal(pedido);
     }
+
+    if (dto.getObservacao() != null) {
+        pedido.setObservacao(dto.getObservacao());
+    }
+
+    return pedidoRepository.save(pedido);
+}
+
     //altera o status
 
     @PutMapping("/status/{id}")
@@ -165,5 +157,17 @@ public class PedidoController {
         }
 
         return pedidoRepository.save(pedido);
+    }
+    //vai excluir
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        //verifica se produto existe ou não
+
+        if (!pedidoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        pedidoService.excluir(id);
+        return ResponseEntity.noContent().build();
+
     }
 }

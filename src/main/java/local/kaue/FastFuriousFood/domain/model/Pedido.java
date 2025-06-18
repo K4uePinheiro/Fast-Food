@@ -53,6 +53,8 @@ public class Pedido {
 
     @Column(name = "data_finalizacao")
     private LocalDateTime dataFinalizacao;
+    
+
 
     public Pedido() {
     }
@@ -118,6 +120,8 @@ public class Pedido {
     public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
         this.dataFinalizacao = dataFinalizacao;
     }
+   
+
 
     @Override
     public int hashCode() {
