@@ -57,15 +57,15 @@ public class PedidoService {
 
         }
         pedido.setProdutos(produtosCompletos);
-        
+
         calcularPrecoTotal(pedido);
         return pedidoRepository.save(pedido);
-        
+
     }
 
-     public Pedido atualizarPedido(Long pedidoId, Pedido pedidoAtualizado) {
+    public Pedido atualizarPedido(Long pedidoId, Pedido pedidoAtualizado) {
         Pedido pedidoExistente = pedidoRepository.findById(pedidoId)
-            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado"));
 
         if (pedidoExistente.getStatus() == StatusPedido.ENTREGUE) {
             throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");

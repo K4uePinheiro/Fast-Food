@@ -11,6 +11,7 @@ import local.kaue.FastFuriousFood.domain.model.StatusPedido;
  * @author kaueg
  */
 public class StatusPedidoDTO {
+
     private String status;
 
     public String getStatus() {

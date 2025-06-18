@@ -32,5 +32,4 @@ public class AtualizarPedidoDTO {
         this.observacao = observacao;
     }
 
-      
 }

@@ -4,7 +4,6 @@
  */
 package local.kaue.FastFuriousFood.Controller;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,6 @@ public class PedidoController {
     }
 
     //vai mostrar
-    
     @GetMapping("{id}")
     public ResponseEntity<Pedido> findById(@PathVariable Long id) {
 
@@ -90,34 +88,33 @@ public class PedidoController {
 
     //Vai atualizar- mexer no caso
     @PutMapping("/{id}")
-   public Pedido atualizarPedido(@PathVariable Long id, @RequestBody AtualizarPedidoDTO dto) {
-    Pedido pedido = pedidoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+    public Pedido atualizarPedido(@PathVariable Long id, @RequestBody AtualizarPedidoDTO dto) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
-    // Verifica se pedido está entregue
-    if (pedido.getStatus() == StatusPedido.ENTREGUE) {
-        throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
+        // Verifica se pedido está entregue
+        if (pedido.getStatus() == StatusPedido.ENTREGUE) {
+            throw new IllegalStateException("Pedido já foi entregue e não pode ser alterado.");
+        }
+
+        if (dto.getProdutosIds() != null && !dto.getProdutosIds().isEmpty()) {
+            List<Produto> produtos = produtoRepository.findAllById(dto.getProdutosIds());
+
+            // Limpa e adiciona os produtos
+            pedido.getProdutos().clear();
+            pedido.getProdutos().addAll(produtos);
+
+            pedido = pedidoService.calcularPrecoTotal(pedido);
+        }
+
+        if (dto.getObservacao() != null) {
+            pedido.setObservacao(dto.getObservacao());
+        }
+
+        return pedidoRepository.save(pedido);
     }
-
-    if (dto.getProdutosIds() != null && !dto.getProdutosIds().isEmpty()) {
-        List<Produto> produtos = produtoRepository.findAllById(dto.getProdutosIds());
-        
-        // Limpa e adiciona os produtos
-        pedido.getProdutos().clear();
-        pedido.getProdutos().addAll(produtos);
-
-        pedido = pedidoService.calcularPrecoTotal(pedido);
-    }
-
-    if (dto.getObservacao() != null) {
-        pedido.setObservacao(dto.getObservacao());
-    }
-
-    return pedidoRepository.save(pedido);
-}
 
     //altera o status
-
     @PutMapping("/status/{id}")
     public Pedido atualizarStatus(@PathVariable Long id, @RequestBody StatusPedidoDTO dto) {
         Pedido pedido = pedidoRepository.findById(id)
@@ -158,6 +155,7 @@ public class PedidoController {
 
         return pedidoRepository.save(pedido);
     }
+
     //vai excluir
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {

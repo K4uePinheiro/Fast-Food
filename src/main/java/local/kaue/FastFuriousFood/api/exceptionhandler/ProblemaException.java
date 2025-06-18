@@ -12,17 +12,18 @@ import java.util.List;
  * @author kaueg
  */
 public class ProblemaException {
+
     private Integer status;
     private LocalDateTime datahora;
     private String titulo;
-    
+
     private List<CampoProblema> listaCamposProblema;
-    
-    public List<CampoProblema> getCampos(){
+
+    public List<CampoProblema> getCampos() {
         return listaCamposProblema;
     }
-    
-    public void setCampos(List<CampoProblema> campos){
+
+    public void setCampos(List<CampoProblema> campos) {
         this.listaCamposProblema = campos;
     }
 
@@ -57,8 +58,8 @@ public class ProblemaException {
     public void setListaCamposProblema(List<CampoProblema> listaCamposProblema) {
         this.listaCamposProblema = listaCamposProblema;
     }
-    
-     public static class CampoProblema {
+
+    public static class CampoProblema {
 
         private String nomeCampo;
         private String mensagemCampo;
@@ -83,6 +84,6 @@ public class ProblemaException {
         public void setMensagemCampo(String mensagemCampo) {
             this.mensagemCampo = mensagemCampo;
         }
-        
-     }    
+
+    }
 }

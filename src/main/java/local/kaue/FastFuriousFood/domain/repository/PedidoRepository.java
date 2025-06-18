@@ -15,7 +15,8 @@ import org.springframework.stereotype.Repository;
  * @author kaueg
  */
 @Repository
-public interface PedidoRepository extends JpaRepository<Pedido, Long>{
-      List<Pedido> findByStatus(StatusPedido status);
+public interface PedidoRepository extends JpaRepository<Pedido, Long> {
+
+    List<Pedido> findByStatus(StatusPedido status);
 
 }
